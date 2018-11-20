@@ -1,0 +1,37 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "jsRules": {},
+  "rules": {
+    "max-line-length": {
+      "options": [
+        140
+      ]
+    },
+    "no-any": true,
+    "indent": [
+      true,
+      "spaces",
+      2
+    ],
+    "no-console": false,
+    "no-var-requires": true,
+    "quotemark": [
+      true,
+      "single",
+      "avoid-escape",
+      "jsx-single"
+    ],
+    "prefer-const": true,
+    "no-shadowed-variable": true,
+    "no-eval": true,
+    "no-empty": true,
+    "interface-name": [
+      true,
+      "never-prefix"
+    ]
+  },
+  "rulesDirectory": []
+}
