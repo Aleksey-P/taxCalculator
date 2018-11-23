@@ -1,34 +1,45 @@
 import { ShoppingItem } from './interfaces';
 import { Commodity } from './models';
 import { MathOperations, StringOperations } from './shared';
-import { BasicTax } from './models';
-import { ImportTax } from './models';
 import { NewCommodity } from './interfaces';
+import { TaxService } from './services';
 
 export class Main {
-  private static currentTaxes = [new BasicTax(), new ImportTax()];
-
-  public static handleShopingItemInput(data: string): void {
-    let commodities: Commodity[];
-
-    try {
-      commodities = Main.createCommodities(data);
-    } catch (e) {
+  public static handleShoppingItemsInput(): void {
+    const data = process.stdin.read() as string;
+    if (data === null || data.length === 0) {
       Main.writeInputFormatMessage();
       return;
     }
 
-    Main.currentTaxes.map((tax) => {
-      commodities.map((commodity) => {
-        commodity.taxes = MathOperations.safetyPlus(commodity.taxes, tax.calculateTax(commodity));
-      });
-    });
+    let items: ShoppingItem[] = [];
+    try {
+      items = Main.createCommodities(data);
+    } catch (_) {
+      Main.writeInputFormatMessage();
+    }
 
-    const outputString = Main.getOutputString(commodities);
+    TaxService.calculateShoppingItemsTax(items);
+
+    const outputString = Main.getOutputString(items);
     process.stdout.write(outputString);
   }
 
-  public static writeInputFormatMessage(): void {
+  public static createCommodities(data: string): Commodity[] {
+    const commoditiesValues = data.split(' \\ ');
+
+    const result: Commodity[] = [];
+    for (const commodityString of commoditiesValues) {
+      const parsedCommodity = Main.parseInputCommodityValues(commodityString);
+      Main.checkInputCommodityItemValues(parsedCommodity.name, parsedCommodity.count, parsedCommodity.originalPrice);
+
+      result.push(new Commodity(parsedCommodity));
+    }
+
+    return result;
+  }
+
+  private static writeInputFormatMessage(): void {
     process.stdout.write('Please, use next input fromat: \n{{Count}} {{Name}} at {{Price}} \\ {{Count}} {{Name}} at {{Price}}\n');
   }
 
@@ -48,35 +59,21 @@ export class Main {
     return outputString;
   }
 
-  private static createCommodities(data: string): Commodity[] {
-    const commoditiesValues = data.split(' \\ ');
-
-    const result: Commodity[] = [];
-    for (let i = 0; i < commoditiesValues.length; i++) {
-      const parsedCommodity = Main.parseInputCommodityValues(commoditiesValues[i]);
-      Main.checkInputCommodityItemValues(parsedCommodity.name, parsedCommodity.count, parsedCommodity.originalPrice);
-
-      result.push(new Commodity(parsedCommodity));
-    }
-
-    return result;
-  }
-
   private static parseInputCommodityValues(values: string): NewCommodity {
     const parsedCommodityValues = values.split(' at ');
     const endOfCountIndex = parsedCommodityValues[0].indexOf(' ') + 1;
     const countSubstring = parsedCommodityValues[0].trim().slice(0, endOfCountIndex);
 
     return {
+      count: parseInt(countSubstring, 10),
       name: parsedCommodityValues[0].slice(endOfCountIndex).toLowerCase(),
-      count: parseInt(countSubstring),
-      originalPrice: parseFloat(StringOperations.deleteAllCommas(parsedCommodityValues[1]))
-    }
+      originalPrice: parseFloat(StringOperations.deleteAllCommas(parsedCommodityValues[1])),
+    };
   }
 
   private static checkInputCommodityItemValues(name: string, count: number, price: number): void {
     if (name.length === 0 || isNaN(count) || count < 1 || isNaN(price) || price < 0) {
-      throw new Error();
+      throw new Error('Wrong Input!');
     }
   }
 }

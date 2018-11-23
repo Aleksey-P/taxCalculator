@@ -27,6 +27,7 @@
     "no-shadowed-variable": true,
     "no-eval": true,
     "no-empty": true,
+    "ordered-imports": false,
     "interface-name": [
       true,
       "never-prefix"

@@ -8,7 +8,7 @@ export class Commodity implements ShoppingItem {
   public originalPrice: number;
   public taxes = 0;
   public get fullPrice(): number {
-    return parseFloat(Number.prototype.toFixed.call(MathOperations.safetyPlus(this.originalPrice, this.taxes), 5).toString());
+    return MathOperations.safetyPlus(this.originalPrice, this.taxes);
   }
 
   constructor(params: NewCommodity) {

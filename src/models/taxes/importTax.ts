@@ -8,7 +8,9 @@ export class ImportTax extends Tax implements CalculatableTax {
   }
 
   public calculateTax(item: ShoppingItem): number {
-    if (item.name.indexOf(ImportedTaxKeywords.imported) === -1) return 0;
+    if (item.name.indexOf(ImportedTaxKeywords.imported) === -1) {
+      return 0;
+    }
 
     return this.getTaxValue(item.originalPrice, item.count);
   }

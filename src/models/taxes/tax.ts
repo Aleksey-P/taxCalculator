@@ -1,4 +1,4 @@
-import { TaxValues } from '../../shared';
+import { TaxValues, MathOperations } from '../../shared';
 
 export abstract class Tax {
   protected taxValue: TaxValues;
@@ -8,10 +8,6 @@ export abstract class Tax {
   }
 
   public getTaxValue(price: number, count: number): number {
-    return this.roundTax(price * this.taxValue) * count;
-  }
-
-  private roundTax(price: number): number {
-    return Math.ceil(price / 0.05) * 0.05;
+    return MathOperations.roundNumToMultipleOf(price * this.taxValue, 0.05) * count;
   }
 }

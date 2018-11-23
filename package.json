@@ -6,12 +6,18 @@
   "scripts": {
     "start": "node ./node_modules/typescript/bin/tsc && node ./dist/index.js",
     "lint": "node ./node_modules/tslint/bin/tslint -c tslint.json --project tsconfig.json src/**/*.ts",
-    "build": "npm run test && node ./node_modules/typescript/bin/tsc"
+    "build": "npm run test && node ./node_modules/typescript/bin/tsc",
+    "test": "node ./node_modules/mocha/bin/mocha --require ts-node/register tests/**/*.spec.ts"
   },
   "author": "Aleksey_P",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "ts-node": "^7.0.0",
     "typescript": "^3.1.6",
     "@types/node": "^10.12.9",
     "tslint": "^5.11.0"

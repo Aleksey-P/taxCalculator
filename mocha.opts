@@ -1,0 +1,6 @@
+--require ts-node/register
+--full-trace
+--colors
+-R spec
+--exit
+tests/**/*.test.ts
